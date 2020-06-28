@@ -1,9 +1,16 @@
 import React from 'react';
-import { Text, StyleSheet } from 'react-native';
+import { Text, StyleSheet, Button, View } from 'react-native';
 
-function LoginScreen(){
+
+function LoginScreen({navigation}: any){
     return (
+        <View>
     <Text style={styles.textStyle}> Login Screen</Text>
+    <Button
+    title="Go to Messages"
+    onPress={() => navigation.navigate('Messages')}
+  />
+  </View>
     );
 };
 
