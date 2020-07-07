@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, FlatList } from 'react-native';
+import Message  from '../components/Message';
 
 function MessageListScreen(){
     const messages = [
@@ -13,13 +14,10 @@ function MessageListScreen(){
         { author: "Cindy" }
     ];
     return (
-    <FlatList
-        keyExtractor={(message)=> message.author}
-        data={messages}
-        renderItem={({item}) => {
-        return <Text style={styles.textStyle}>{item.author}</Text>
-        }
-    }/>
+        <View>
+            <Message message="Couco" imageSource={require('../../assets/images/beach.jpg')}></Message>
+        </View>
+        
     );
 };
 
