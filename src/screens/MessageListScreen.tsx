@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, FlatList } from 'react-native';
+import { View, StyleSheet, ScrollView } from 'react-native';
 import Message  from '../components/Message';
 
 function MessageListScreen(){
@@ -15,7 +15,12 @@ function MessageListScreen(){
     ];
     return (
         <View>
-            <Message message="Couco" imageSource={require('../../assets/images/beach.jpg')}></Message>
+            
+        <ScrollView>
+            {messages.map(message => 
+            <Message message={message.author} imageSource={require('../../assets/images/beach.jpg')}></Message>
+            )}
+        </ScrollView>
         </View>
         
     );
