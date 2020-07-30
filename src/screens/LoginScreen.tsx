@@ -2,14 +2,16 @@ import React, { useState } from 'react';
 import { Text, StyleSheet, View, TouchableOpacity, Modal, TouchableHighlight } from 'react-native';
 import { Input } from 'react-native-elements';
 import ciasieChat from '../api/ciasieChat';
+import AsyncStorage from '@react-native-community/async-storage';
+import base64 from 'react-native-base64' ;
+import { BaseRouter } from '@react-navigation/native';
 
 function LoginScreen({navigation}: any){
     const [isLogin, setIsLogin] = useState(true);
-    const [login, setLogin] = useState("");
+    const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [repeatPassword, setRepeatPassword] = useState("");
-    const [errorMessage, setErrorMessage] = useState('');
-    const [errorModalVisible, setErrorModalVisible ] = useState(false);
+    const [modalMessage, setModaleMessage] = useState('');
     const [successModalVisible, setSuccessModalVisible ] = useState(false);
 
     const register = async (username: string, password: string) => {
@@ -18,46 +20,55 @@ function LoginScreen({navigation}: any){
                 username: username,
                 password: password
             });
+            setModaleMessage('Account created successfully !');
             setSuccessModalVisible(true);
         }catch(error){
-            setErrorModalVisible(true);
+            setSuccessModalVisible(true);
+            setModaleMessage(error.response.data.message);
+        }
+    }
+
+    const login = async(username: string, password: any)=>{
+        try{
+
+            const authHeader = 'Basic '+ base64.encode(`${username}:${password}`);
+            const response = await ciasieChat.get('/user/login',{
+                headers: { 'Authorization': authHeader}
+            });
+            await AsyncStorage.setItem('token', response.data.data.token);
+            navigation.navigate('Messages');
+            
+        }catch(error){
             console.log(error);
-            //setErrorMessage(error);
+            setSuccessModalVisible(true);
+            setModaleMessage('An error occured, please Try Again');
         }
     }
 
     return (
         <View style={styles.marginTop}>
             <Modal 
-            animationType="slide"
-            transparent={true}
-            visible={errorModalVisible}
-            >
-                <Text>ERROR</Text>
-            </Modal>
-            <Modal 
-            animationType="slide"
-            transparent={true}
-            visible={successModalVisible}
-            >
-                        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalText}>Account created Successfully</Text>
+                animationType="slide"
+                transparent={true}
+                visible={successModalVisible}>
+                <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
+                        <Text style={styles.modalText}>{modalMessage}</Text>
 
-            <TouchableHighlight
-              style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
-              onPress={() => {
-                setSuccessModalVisible(!successModalVisible);
-              }}
-            >
-              <Text style={styles.textStyle}>Hide Modal</Text>
-            </TouchableHighlight>
-          </View>
-        </View>
+                        <TouchableHighlight
+                            style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
+                            onPress={() => {
+                            setSuccessModalVisible(!successModalVisible);
+                        }}>
+                            <Text style={styles.textStyle}>OK</Text>
+                        </TouchableHighlight>
+                    </View>
+                </View>
             </Modal>
+
             <Input placeholder="Email"
-             value={login}
-             onChangeText={(email)=>{setLogin(email)}}
+             value={username}
+             onChangeText={(email)=>{setUsername(email)}}
              autoCompleteType="email"
              autoCorrect={false}
              keyboardType="email-address"
@@ -67,7 +78,7 @@ function LoginScreen({navigation}: any){
             onChangeText={(password)=>{setPassword(password)}}
             autoCompleteType="password"
             secureTextEntry={true}/>
-            {login.length <= 4 && !isLogin && <Text style={styles.errorMessage}>Must be at least 4 character long</Text>}
+            {password.length < 4 && !isLogin && <Text style={styles.errorMessage}>Must be at least 4 character long</Text>}
             {!isLogin && <Input placeholder="Repeat Password"
             onChangeText={(repeatPassword)=>{setRepeatPassword(repeatPassword)}}
             autoCompleteType="password"
@@ -87,27 +98,26 @@ function LoginScreen({navigation}: any){
                 <Text>Create Account</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => {
-                Register()
+                Submit()
             }} style={styles.submitButton}>
                 <Text>Submit</Text>
             </TouchableOpacity>
         </View>
     );
 
-    function Register(){
-        console.log("REGISTER");
-        if(!isLogin && password==repeatPassword && login.length>=4){
-            register(login, password);
+    function Submit(){
+        if(!isLogin && password==repeatPassword && username.length>=4){
+            register(username, password);
         }
         if(isLogin){
-            navigation.navigate("Messages");
+            login(username, password)
         }
     }
 };
 
 const styles = StyleSheet.create({
     textStyle: {
-        fontSize: 30
+        fontSize: 20
     },
     marginTop: {
         marginTop: 25

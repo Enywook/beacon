@@ -1,11 +1,11 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native'
 
-function Message(props: any){
+function Message({author, message} : any){
     return (
         <View>
-            <Image source={props.imageSource}/>
-            <Text> {props.message} </Text>
+            <Text>{author}</Text>
+            <Text> {message} </Text>
         </View>
     )
 }

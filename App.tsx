@@ -5,7 +5,6 @@ import { NavigationContainer, StackActions } from '@react-navigation/native';
 import { StyleSheet } from 'react-native';
 import LoginScreen from './src/screens/LoginScreen';
 import MessageListScreen from './src/screens/MessageListScreen';
-import Message from './src/components/Message';
 
 const Stack = createStackNavigator();
 
