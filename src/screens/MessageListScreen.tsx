@@ -10,40 +10,38 @@ function MessageListScreen(){
     const [token, setToken] = useState<any>(null);
 
     const loadMessages = async ()=>{
+        console.log("loadMessages");
         try{
-        const response = await ciasieChat.get('/message', {headers : {'Authorization': 'Bearer '+await AsyncStorage.getItem('token')}});
-        setMessages(response.data.data);
-        messages.forEach((element:any) => {
-            console.log(element);
-        });
+            const response = await ciasieChat.get('/message', {headers : {'Authorization': 'Bearer '+await AsyncStorage.getItem('token')}});
+            setMessages(response.data.data);
         }catch(error){
             console.log(error.response.data);
         }
     }
 
-    const sendMessage = async () =>{
-        try{
-        ws.send(JSON.stringify({session:{token: token}, message: newMessage}));
-        }catch(e){
-            console.log(e);
-            ws.close();
-        }
-    }
+    // const sendMessage = async () =>{
+    //     try{
+    //     ws.send(JSON.stringify({session:{token: token}, message: newMessage}));
+    //     }catch(e){
+    //         console.log(e);
+    //         ws.close();
+    //     }
+    // }
 
-    var ws = new WebSocket('wss://iut.jeremypgn.com/ws?session_token='+token);
-    ws.onmessage = (httpResponse) =>{
-        try{
-        // console.log((JSON.parse(httpResponse.data.data)));
-        // const httpResponseJSON = JSON.parse(httpResponse.data);
-        // if(httpResponseJSON.type == "new_message"){
-        //     console.log("You've got mail");
-        // }
-        //setMessages([...messages, JSON.parse(message.data.data)]);
-        }catch(e){
-            console.log(e);
-            ws.close();
-        }
-    }
+    const ws = new WebSocket('wss://iut.jeremypgn.com/ws?session_token='+token);
+    // ws.onmessage = (httpResponse) =>{
+    //     try{
+    //     console.log((JSON.parse(httpResponse.data.data)));
+    //     const httpResponseJSON = JSON.parse(httpResponse.data);
+    //     if(httpResponseJSON.type == "new_message"){
+    //         console.log("You've got mail");
+    //     }
+    //     setMessages([...messages, JSON.parse(message.data.data)]);
+    //     }catch(e){
+    //         console.log(e);
+    //         ws.close();
+    //     }
+    // }
 
     useEffect(() => {
         console.log("Connard");
@@ -75,7 +73,6 @@ function MessageListScreen(){
             //onSubmitEditing={sendMessage}
             />
         </View>
-        <Button onPress={() => {ws.close();}} title="CloseConnection">Close Connection</Button> 
         </View> 
     );
 };
@@ -90,7 +87,7 @@ const styles = StyleSheet.create({
         borderStyle: "solid",
         borderWidth: 1,
         borderColor: "black",
-        width: '100%',
+        width: '90%',
         height: 40,
         paddingLeft: 8
     },
@@ -98,10 +95,11 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'flex-end',
         marginBottom: 36,
+        marginLeft: 22
     },
     container: {
         flex: 1,
-        alignItems: 'flex-start'
+        alignItems: 'flex-start',
       }
 });
 
