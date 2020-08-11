@@ -30,8 +30,6 @@ function LoginScreen({navigation}: any){
 
     const login = async(username: string, password: any)=>{
         try{
-            setUsername('FrancisCabrel');
-            setPassword('Poker');
             const authHeader = 'Basic '+ base64.encode(`${username}:${password}`);
             const response = await ciasieChat.get('/user/login',{
                 headers: { 'Authorization': authHeader}

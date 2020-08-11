@@ -25,8 +25,9 @@ function MessageListScreen(){
                 const httpResponseJSON = JSON.parse(httpResponse.data);
             if(httpResponseJSON.type == "new_message"){
                 console.log("You've got mail");
+                setMessages([...messages, httpResponseJSON.data]);
             }
-            //setMessages([...messages, JSON.parse(httpResponse.data.data)]);
+            return () => webSocket.current.close();
             }catch(e){
                 console.log(e);
             }
