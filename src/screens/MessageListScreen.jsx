@@ -73,7 +73,6 @@ function MessageListScreen(){
             onSubmitEditing={sendMessage}
             />
         </View>
-        <Button onPress={()=>{if(ws)ws.close}} title="close connection">Close Connection</Button>
         </View>
     );
 };

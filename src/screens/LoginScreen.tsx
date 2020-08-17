@@ -65,7 +65,7 @@ function LoginScreen({navigation}: any){
                 </View>
             </Modal>
 
-            <Input placeholder="Email"
+            <Input placeholder="Login"
              value={username}
              onChangeText={(email)=>{setUsername(email)}}
              autoCompleteType="email"
